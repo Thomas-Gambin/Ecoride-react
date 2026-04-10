@@ -86,12 +86,12 @@ export function Header() {
     <header
       ref={headerRef}
       className={cn(
-        "sticky top-0 z-50 w-full border-b transition-[padding,background-color,border-color,box-shadow,backdrop-filter] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+        "sticky top-0 z-50 w-full transition-[padding,background-color,box-shadow,backdrop-filter,-webkit-backdrop-filter] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
         isOpen
-          ? "border-transparent bg-white py-0 shadow-none !backdrop-blur-none [backdrop-filter:none] [-webkit-backdrop-filter:none] supports-[backdrop-filter]:!bg-white dark:border-transparent dark:!bg-zinc-950 dark:supports-[backdrop-filter]:!bg-zinc-950 dark:[backdrop-filter:none] dark:[-webkit-backdrop-filter:none]"
+          ? "bg-white py-0 shadow-none !backdrop-blur-none [backdrop-filter:none] [-webkit-backdrop-filter:none] supports-[backdrop-filter]:!bg-white dark:!bg-zinc-950 dark:supports-[backdrop-filter]:!bg-zinc-950 dark:[backdrop-filter:none] dark:[-webkit-backdrop-filter:none]"
           : isScrolled
-            ? "border-stone-200/70 bg-white py-0 shadow-[0_1px_0_rgba(15,23,42,0.06)] backdrop-blur-none dark:border-transparent dark:bg-zinc-950/95 dark:shadow-none dark:supports-[backdrop-filter]:bg-zinc-950/88"
-            : "border-transparent bg-white py-0 backdrop-blur-none dark:bg-zinc-950/55 dark:backdrop-blur-[6px] dark:supports-[backdrop-filter]:bg-zinc-950/40"
+            ? "bg-white/55 py-0 shadow-none backdrop-blur-sm dark:bg-zinc-950/48 dark:shadow-none dark:backdrop-blur-sm"
+            : "bg-white/92 py-0 backdrop-blur-sm dark:bg-zinc-950/42 dark:backdrop-blur-sm dark:supports-[backdrop-filter]:bg-zinc-950/30"
       )}
     >
       <div
