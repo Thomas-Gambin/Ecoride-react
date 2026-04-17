@@ -113,7 +113,7 @@ export function Header() {
         <a
           href="/"
           className={cn(
-            "group flex shrink-0 items-center justify-self-center rounded-2xl outline-none ring-emerald-700/0 transition-[box-shadow] duration-300",
+            "group flex shrink-0 items-center justify-self-center gap-3 rounded-2xl outline-none ring-emerald-700/0 transition-[box-shadow] duration-300",
             "max-md:w-full max-md:justify-center md:justify-self-start",
             "focus-visible:ring-2 focus-visible:ring-emerald-700/35",
             ringOffset
@@ -123,13 +123,27 @@ export function Header() {
             src="/logo.png"
             alt="EcoRide"
             className={cn(
-              "block h-[80px] w-[150px] shrink-0 object-contain object-left max-md:object-center",
+              "block h-[80px] w-[80px] shrink-0 object-contain object-left max-md:object-center",
               "transition-transform duration-500 ease-out group-hover:scale-[1.02]"
             )}
             width={150}
             height={80}
             decoding="async"
           />
+          <span
+            className={cn(
+              "whitespace-nowrap font-sans text-2xl font-extrabold leading-none tracking-tight",
+              "rounded-full px-4 py-2",
+              "bg-emerald-600/10 text-emerald-800 dark:bg-emerald-400/10 dark:text-emerald-200",
+              "shadow-[0_1px_0_rgba(15,23,42,0.05)] dark:shadow-[0_1px_0_rgba(0,0,0,0.25)_inset]",
+              "transition-[transform,background-color,box-shadow] duration-500 ease-out will-change-transform",
+              "group-hover:scale-[1.03] group-hover:bg-emerald-600/16 group-hover:shadow-[0_10px_30px_rgba(16,185,129,0.18)]",
+              "dark:group-hover:bg-emerald-400/16 dark:group-hover:shadow-[0_10px_30px_rgba(52,211,153,0.12)]",
+              "sm:text-3xl"
+            )}
+          >
+            Ecoride
+          </span>
         </a>
 
         <nav
