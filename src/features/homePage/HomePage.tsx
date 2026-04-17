@@ -1,7 +1,7 @@
 import BenefitsSection from "./components/BenefitsSection"
 import ConceptSection from "./components/ConceptSection"
 import HeroSection from "./components/HeroSection"
-import SiteFooter from "./components/SiteFooter"
+import Footer from "@/shared/components/layout/Footer"
 
 const image1Src = "/image1.png"
 const image2Src = "/image2.png"
@@ -17,7 +17,7 @@ export default function HomePage() {
       />
       <ConceptSection imageSrc={image2Src} />
       <BenefitsSection />
-      <SiteFooter />
+      <Footer />
     </main>
   )
 }
