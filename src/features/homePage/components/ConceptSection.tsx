@@ -6,7 +6,7 @@ export default function ConceptSection({ imageSrc }: { imageSrc: string }) {
   return (
     <section id="concept" className="mx-auto max-w-6xl scroll-mt-28 px-4 py-16 sm:px-6 lg:px-8">
       <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:gap-12">
-        <Reveal>
+        <Reveal className="lg:order-2">
           <SectionTitle
             eyebrow="Notre approche"
             title="Une mobilité plus sobre, sans compromis sur le confort."
@@ -48,7 +48,7 @@ export default function ConceptSection({ imageSrc }: { imageSrc: string }) {
           </div>
         </Reveal>
 
-        <Reveal delay={0.06}>
+        <Reveal delay={0.06} className="lg:order-1">
           <div className="relative">
             <div
               className="pointer-events-none absolute -inset-3 rounded-[34px] bg-gradient-to-br from-lime-500/10 via-transparent to-emerald-700/10 blur-xl dark:from-lime-400/10 dark:to-emerald-400/10"
@@ -67,10 +67,10 @@ export default function ConceptSection({ imageSrc }: { imageSrc: string }) {
               />
               <div className="absolute bottom-4 left-4 right-4 rounded-[24px] border border-white/35 bg-white/60 p-4 backdrop-blur-md dark:border-zinc-700/60 dark:bg-zinc-950/40">
                 <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
-                  Une expérience qui inspire confiance.
+                  Simple, clair, agréable.
                 </p>
                 <p className="mt-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-                  Un design lisible, des interactions nettes, et un thème sombre/clair parfaitement cohérent.
+                  Tu trouves un trajet rapidement, tu comprends tout de suite les infos importantes, sur mobile comme sur ordinateur.
                 </p>
               </div>
             </div>
