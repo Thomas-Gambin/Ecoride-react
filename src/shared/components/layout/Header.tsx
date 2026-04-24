@@ -2,6 +2,7 @@ import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from
 import { createPortal } from "react-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import { Menu, Moon, Sun, X } from "lucide-react"
+import { Link } from "react-router-dom"
 import { useTheme } from "../../hooks/useTheme"
 import { cn } from "../../lib/utils"
 
@@ -110,8 +111,8 @@ export function Header() {
           />
         </div>
 
-        <a
-          href="/"
+        <Link
+          to="/"
           className={cn(
             "group flex shrink-0 items-center justify-self-center gap-3 rounded-2xl outline-none ring-emerald-700/0 transition-[box-shadow] duration-300",
             "max-md:w-full max-md:justify-center md:justify-self-start",
@@ -144,16 +145,16 @@ export function Header() {
           >
             Ecoride
           </span>
-        </a>
+        </Link>
 
         <nav
           aria-label="Navigation principale"
           className="hidden items-center justify-center gap-0.5 md:col-start-2 md:flex md:justify-self-center lg:gap-1"
         >
           {NAV.map((item) => (
-            <a
+            <Link
               key={item.href}
-              href={item.href}
+              to={item.href}
               className={cn(
                 "group relative rounded-full px-4 py-2.5 text-base font-medium outline-none transition-colors duration-300",
                 "text-zinc-600 hover:text-emerald-600 dark:text-zinc-300 dark:hover:text-emerald-400",
@@ -166,13 +167,13 @@ export function Header() {
                 className="pointer-events-none absolute inset-x-3 bottom-2 h-px origin-left scale-x-0 rounded-full bg-gradient-to-r from-emerald-500/0 via-emerald-500/90 to-emerald-600/0 opacity-0 transition-[transform,opacity] duration-300 ease-out group-hover:scale-x-100 group-hover:opacity-100 dark:from-emerald-400/0 dark:via-emerald-400/90 dark:to-emerald-500/0"
                 aria-hidden
               />
-            </a>
+            </Link>
           ))}
         </nav>
 
         <div className="hidden items-center justify-end gap-2 justify-self-end lg:gap-3 md:col-start-3 md:flex">
-          <a
-            href="/connexion"
+          <Link
+            to="/login"
             className={cn(
               "group relative rounded-full px-4 py-2.5 text-base font-medium outline-none",
               "transition-colors duration-200 ease-out",
@@ -186,7 +187,7 @@ export function Header() {
               className="pointer-events-none absolute inset-x-3 bottom-2 h-px scale-x-0 rounded-full bg-gradient-to-r from-emerald-500/0 via-emerald-500/90 to-emerald-600/0 opacity-0 transition-[transform,opacity] duration-200 ease-out group-hover:scale-x-100 group-hover:opacity-100 dark:from-emerald-400/0 dark:via-emerald-400/90 dark:to-emerald-500/0"
               aria-hidden
             />
-          </a>
+          </Link>
           <a
             href="/recherche"
             className={cn(
@@ -260,9 +261,8 @@ export function Header() {
                 </p>
                 <nav aria-label="Navigation mobile" className="mt-6 flex flex-1 flex-col gap-1">
                   {NAV.map((item, i) => (
-                    <motion.a
+                    <motion.div
                       key={item.href}
-                      href={item.href}
                       onClick={closeMenu}
                       initial={{ opacity: 0, x: 16 }}
                       animate={{ opacity: 1, x: 0 }}
@@ -273,11 +273,16 @@ export function Header() {
                         "focus-visible:ring-2 focus-visible:ring-emerald-700/30 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-zinc-900"
                       )}
                     >
-                      <span>{item.label}</span>
-                      <span className="text-base font-normal text-zinc-400 transition-transform duration-300 group-hover:translate-x-0.5 dark:text-zinc-500" aria-hidden>
-                        →
-                      </span>
-                    </motion.a>
+                      <Link to={item.href} className="flex w-full items-center justify-between" onClick={closeMenu}>
+                        <span>{item.label}</span>
+                        <span
+                          className="text-base font-normal text-zinc-400 transition-transform duration-300 group-hover:translate-x-0.5 dark:text-zinc-500"
+                          aria-hidden
+                        >
+                          →
+                        </span>
+                      </Link>
+                    </motion.div>
                   ))}
                 </nav>
                 <motion.div
@@ -286,8 +291,8 @@ export function Header() {
                   transition={{ delay: 0.2, duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                   className="mt-auto flex flex-col gap-3 border-t border-stone-200/80 pt-6 dark:border-zinc-700/80"
                 >
-                  <a
-                    href="/connexion"
+                  <Link
+                    to="/login"
                     onClick={closeMenu}
                     className={cn(
                       "flex w-full items-center justify-center rounded-2xl border-0 px-4 py-3.5 text-base font-semibold outline-none transition-colors duration-200",
@@ -297,7 +302,7 @@ export function Header() {
                     )}
                   >
                     Connexion
-                  </a>
+                  </Link>
                   <a
                     href="/recherche"
                     onClick={closeMenu}
