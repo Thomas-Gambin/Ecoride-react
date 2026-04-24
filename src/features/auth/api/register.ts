@@ -8,12 +8,7 @@ export type RegisterRequest = {
 
 export type RegisterResponse = {
   message: string
-  user: {
-    id: number
-    pseudo: string | null
-    email: string
-    credits: number
-  }
+  requiresEmailVerification: boolean
 }
 
 export async function registerUser(body: RegisterRequest) {

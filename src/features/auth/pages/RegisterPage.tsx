@@ -31,7 +31,6 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState("")
   const [errors, setErrors] = useState<FieldErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [success, setSuccess] = useState<null | { credits: number }>(null)
 
   const pwd = useMemo(() => checkPassword(password), [password])
 
@@ -65,16 +64,17 @@ export default function RegisterPage() {
     if (Object.keys(nextErrors).length > 0) return
 
     setIsSubmitting(true)
-    setSuccess(null)
     try {
-      const result = await registerUser({
+      await registerUser({
         pseudo: pseudo.trim(),
         email: email.trim(),
         password,
       })
 
-      setSuccess({ credits: result.user.credits })
-      window.setTimeout(() => navigate("/login"), 2000)
+      navigate("/register-success", {
+        state: { email: email.trim().toLowerCase() },
+        replace: false,
+      })
     } catch (err) {
       if (err instanceof Error) {
         try {
@@ -123,7 +123,7 @@ export default function RegisterPage() {
             </li>
             <li className="flex gap-3">
               <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-emerald-700/70 dark:bg-emerald-300/70" />
-              <span>Un email de bienvenue pour confirmer la création.</span>
+              <span>Un email de confirmation pour activer ton compte.</span>
             </li>
           </ul>
         </section>
@@ -147,17 +147,6 @@ export default function RegisterPage() {
           {errors.form ? (
             <div className="mt-5 rounded-2xl border border-rose-200/70 bg-rose-50 px-4 py-3 text-sm text-rose-800 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-100">
               {errors.form}
-            </div>
-          ) : null}
-
-          {success ? (
-            <div className="mt-5 rounded-2xl border border-emerald-200/70 bg-emerald-50 px-4 py-3 text-sm text-emerald-900 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-50">
-              Compte créé avec succès. <span className="font-semibold">{success.credits} crédits</span> ont été ajoutés. Redirection vers la connexion…
-              <div className="mt-2">
-                <Link className="font-semibold underline-offset-4 hover:underline" to="/login">
-                  Se connecter maintenant
-                </Link>
-              </div>
             </div>
           ) : null}
 

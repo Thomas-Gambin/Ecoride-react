@@ -1,6 +1,11 @@
 export type ApiErrorShape = {
   message: string
   fields?: Record<string, string>
+  code?: string
+}
+
+export type PostJsonOptions = {
+  credentials?: RequestCredentials
 }
 
 function getBaseUrl() {
@@ -20,7 +25,8 @@ async function readJsonSafe(res: Response) {
 
 export async function postJson<TResponse, TBody extends Record<string, unknown>>(
   path: string,
-  body: TBody
+  body: TBody,
+  options: PostJsonOptions = {},
 ): Promise<TResponse> {
   const url = `${getBaseUrl()}${path}`
 
@@ -28,6 +34,7 @@ export async function postJson<TResponse, TBody extends Record<string, unknown>>
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
+    credentials: options.credentials ?? "same-origin",
   })
 
   const data = await readJsonSafe(res)
@@ -47,7 +54,8 @@ function normalizeApiError(data: unknown): ApiErrorShape {
     // Notre format back (doublons)
     if (typeof d.message === "string") {
       const fields = typeof d.fields === "object" && d.fields !== null ? (d.fields as Record<string, string>) : undefined
-      return { message: d.message, fields }
+      const code = typeof d.code === "string" ? d.code : undefined
+      return { message: d.message, fields, code }
     }
 
     // Format API Platform / Symfony validator (violations)
