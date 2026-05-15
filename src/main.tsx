@@ -3,14 +3,14 @@ import { createRoot } from "react-dom/client"
 import { BrowserRouter } from "react-router-dom"
 import "./index.css"
 import App from "./App.tsx"
-import { ThemeProvider } from "@/shared/context/ThemeProvider"
+import { AppProviders } from "@/app/AppProviders"
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ThemeProvider>
+    <AppProviders>
       <BrowserRouter>
         <App />
       </BrowserRouter>
-    </ThemeProvider>
-  </StrictMode>
+    </AppProviders>
+  </StrictMode>,
 )

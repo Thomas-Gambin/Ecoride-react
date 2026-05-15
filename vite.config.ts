@@ -18,7 +18,7 @@ export default defineConfig(({ mode }) => {
    * - http://<service_symfony>:8000 (même réseau Docker partagé entre les 2 compose)
    */
   const apiProxyTarget =
-    env.VITE_DEV_PROXY_TARGET?.replace(/\/+$/, "") || "http://127.0.0.1:8000"
+    env.VITE_DEV_PROXY_TARGET?.replace(/\/+$/, "") || "http://localhost:8000"
 
   return {
     resolve: {
@@ -37,6 +37,15 @@ export default defineConfig(({ mode }) => {
         "/api": {
           target: apiProxyTarget,
           changeOrigin: true,
+          secure: false,
+          configure: (proxy) => {
+            proxy.on("proxyReq", (proxyReq, req) => {
+              const cookie = req.headers.cookie
+              if (cookie) {
+                proxyReq.setHeader("cookie", cookie)
+              }
+            })
+          },
         },
       },
     },

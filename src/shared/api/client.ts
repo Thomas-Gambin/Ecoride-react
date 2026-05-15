@@ -4,8 +4,18 @@ export type ApiErrorShape = {
   code?: string
 }
 
-export type PostJsonOptions = {
+export type ApiFetchOptions = {
   credentials?: RequestCredentials
+  /** Ne pas déclencher le callback global 401 (ex. bootstrap /api/me). */
+  skipUnauthorizedHandler?: boolean
+}
+
+type UnauthorizedHandler = () => void
+
+let unauthorizedHandler: UnauthorizedHandler | null = null
+
+export function setUnauthorizedHandler(handler: UnauthorizedHandler | null) {
+  unauthorizedHandler = handler
 }
 
 function getBaseUrl() {
@@ -23,19 +33,61 @@ async function readJsonSafe(res: Response) {
   }
 }
 
+export async function apiFetch(
+  path: string,
+  init: RequestInit = {},
+  options: ApiFetchOptions = {},
+): Promise<Response> {
+  const url = `${getBaseUrl()}${path}`
+  const credentials = options.credentials ?? "include"
+
+  const res = await fetch(url, {
+    ...init,
+    credentials,
+    headers: {
+      ...(init.body !== undefined ? { "Content-Type": "application/json" } : {}),
+      ...(init.headers ?? {}),
+    },
+  })
+
+  if (
+    res.status === 401 &&
+    !options.skipUnauthorizedHandler &&
+    unauthorizedHandler &&
+    path !== "/api/login"
+  ) {
+    unauthorizedHandler()
+  }
+
+  return res
+}
+
+export async function getJson<TResponse>(path: string, options: ApiFetchOptions = {}): Promise<TResponse> {
+  const res = await apiFetch(path, { method: "GET" }, options)
+
+  const data = await readJsonSafe(res)
+
+  if (!res.ok) {
+    const apiError = normalizeApiError(data)
+    throw new Error(JSON.stringify(apiError))
+  }
+
+  return data as TResponse
+}
+
 export async function postJson<TResponse, TBody extends Record<string, unknown>>(
   path: string,
   body: TBody,
-  options: PostJsonOptions = {},
+  options: ApiFetchOptions = {},
 ): Promise<TResponse> {
-  const url = `${getBaseUrl()}${path}`
-
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-    credentials: options.credentials ?? "same-origin",
-  })
+  const res = await apiFetch(
+    path,
+    {
+      method: "POST",
+      body: JSON.stringify(body),
+    },
+    options,
+  )
 
   const data = await readJsonSafe(res)
 
@@ -51,14 +103,12 @@ function normalizeApiError(data: unknown): ApiErrorShape {
   if (typeof data === "object" && data !== null) {
     const d = data as Record<string, unknown>
 
-    // Notre format back (doublons)
     if (typeof d.message === "string") {
       const fields = typeof d.fields === "object" && d.fields !== null ? (d.fields as Record<string, string>) : undefined
       const code = typeof d.code === "string" ? d.code : undefined
       return { message: d.message, fields, code }
     }
 
-    // Format API Platform / Symfony validator (violations)
     const violations = d.violations
     if (Array.isArray(violations)) {
       const fields: Record<string, string> = {}
@@ -80,4 +130,3 @@ function normalizeApiError(data: unknown): ApiErrorShape {
 
   return { message: "Une erreur est survenue." }
 }
-
