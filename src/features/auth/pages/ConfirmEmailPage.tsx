@@ -20,16 +20,15 @@ export default function ConfirmEmailPage() {
       return
     }
 
-    let cancelled = false
+    let active = true
     ;(async () => {
       try {
         await verifyEmail({ token })
-        if (!cancelled) {
-          setPhase("success")
-          window.setTimeout(() => navigate("/login", { replace: true }), 4000)
-        }
+        if (!active) return
+        setPhase("success")
+        window.setTimeout(() => navigate("/login", { replace: true }), 4000)
       } catch (err) {
-        if (cancelled) return
+        if (!active) return
         if (err instanceof Error) {
           try {
             const parsed = JSON.parse(err.message) as { code?: string; message?: string }
@@ -52,7 +51,7 @@ export default function ConfirmEmailPage() {
     })()
 
     return () => {
-      cancelled = true
+      active = false
     }
   }, [token, navigate])
 

@@ -74,6 +74,10 @@ function normalizeApiError(data: unknown): ApiErrorShape {
     }
   }
 
+  if (typeof data === "string" && data.includes("Unprocessable Content")) {
+    return { message: "Certains champs sont invalides." }
+  }
+
   return { message: "Une erreur est survenue." }
 }
 

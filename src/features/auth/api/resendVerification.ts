@@ -6,6 +6,7 @@ export type ResendVerificationRequest = {
 
 export type ResendVerificationResponse = {
   message: string
+  code?: "ALREADY_VERIFIED" | "EMAIL_SEND_FAILED" | "VALIDATION_ERROR"
 }
 
 export async function resendVerificationEmail(body: ResendVerificationRequest) {
