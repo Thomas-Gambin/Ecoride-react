@@ -117,7 +117,7 @@ export function UserMenu({ variant, onNavigate, className }: UserMenuProps) {
 
   const menuItems = (
     <>
-      <Link to="/demo-protege" role="menuitem" onClick={handleNavClick} className={menuItemClass}>
+      <Link to="/profil" role="menuitem" onClick={handleNavClick} className={menuItemClass}>
         Mon compte
       </Link>
       <Link to="/trajets/creer" role="menuitem" onClick={handleNavClick} className={menuItemClass}>
@@ -147,7 +147,7 @@ export function UserMenu({ variant, onNavigate, className }: UserMenuProps) {
       >
         <p className="px-1 text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">Compte</p>
         <Link
-          to="/demo-protege"
+          to="/profil"
           onClick={handleNavClick}
           className="flex cursor-pointer items-center gap-2 rounded-2xl px-3 py-3 text-base font-medium text-zinc-800 outline-none transition-colors hover:bg-white/80 dark:text-zinc-100 dark:hover:bg-zinc-800/80"
         >

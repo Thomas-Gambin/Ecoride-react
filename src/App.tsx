@@ -6,6 +6,7 @@ import ConfirmEmailPage from "./features/auth/pages/ConfirmEmailPage"
 import LoginPage from "./features/auth/pages/LoginPage"
 import { ProtectedRoute } from "@/shared/components/routing/ProtectedRoute"
 import { RootLayout } from "@/shared/components/layout/RootLayout"
+import ProfilePage from "@/features/profile/pages/ProfilePage"
 
 function App() {
   return (
@@ -18,16 +19,14 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/connexion" element={<Navigate to="/login" replace />} />
         <Route
-          path="/demo-protege"
+          path="/profil"
           element={
             <ProtectedRoute roles={["ROLE_USER"]}>
-              <main className="mx-auto w-full max-w-6xl px-6 py-14">
-                <h1 className="text-2xl font-extrabold text-zinc-900 dark:text-zinc-50">Mon compte</h1>
-                <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">Espace utilisateur (à venir).</p>
-              </main>
+              <ProfilePage />
             </ProtectedRoute>
           }
         />
+        <Route path="/demo-protege" element={<Navigate to="/profil" replace />} />
         <Route
           path="/trajets/creer"
           element={
