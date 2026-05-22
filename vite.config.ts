@@ -26,6 +26,9 @@ export default defineConfig(({ mode }) => {
         "@": path.resolve(__dirname, "./src"),
       },
     },
+    optimizeDeps: {
+      include: ["sonner"],
+    },
     plugins: [react(), tailwindcss()],
     server: {
       host: true,

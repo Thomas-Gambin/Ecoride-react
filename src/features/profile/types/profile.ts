@@ -2,6 +2,13 @@ import type { AuthUser, ProfileType } from "@/features/auth/types/user"
 
 export type { ProfileType }
 
+export const CAR_ENERGY_OPTIONS = [
+  { value: "essence", label: "Essence" },
+  { value: "diesel", label: "Diesel" },
+  { value: "hybride", label: "Hybride" },
+  { value: "electrique", label: "Électrique" },
+] as const
+
 export type Vehicle = {
   id: number
   registrationNumber: string
@@ -11,7 +18,6 @@ export type Vehicle = {
   model: string
   color: string
   energy: string
-  seatsAvailable: number
 }
 
 export type VehiclePayload = {
@@ -21,7 +27,6 @@ export type VehiclePayload = {
   model: string
   color: string
   energy: string
-  seatsAvailable: number
 }
 
 export type CustomPreference = {

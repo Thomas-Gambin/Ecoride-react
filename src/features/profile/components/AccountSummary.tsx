@@ -3,7 +3,7 @@ import SoftCard from "@/features/homePage/components/SoftCard"
 
 export function AccountSummary({ user }: { user: AuthUser }) {
   return (
-    <SoftCard>
+    <SoftCard interactive={false}>
       <section id="credits" className="p-6">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-300">
           Compte
