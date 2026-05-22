@@ -13,6 +13,7 @@ export default function ResendVerificationForm({ initialEmail = "", compact = fa
   const [email, setEmail] = useState(initialEmail)
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [successHint, setSuccessHint] = useState<string | null>(null)
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -25,8 +26,16 @@ export default function ResendVerificationForm({ initialEmail = "", compact = fa
     }
     setStatus("loading")
     setErrorMessage(null)
+    setSuccessHint(null)
     try {
-      await resendVerificationEmail({ email: trimmed.toLowerCase() })
+      const res = await resendVerificationEmail({ email: trimmed.toLowerCase() })
+      if (res.code === "ALREADY_VERIFIED") {
+        setStatus("success")
+        setErrorMessage(null)
+        setSuccessHint(res.message)
+        return
+      }
+      setSuccessHint(res.message)
       setStatus("success")
     } catch (err) {
       setStatus("error")
@@ -74,7 +83,8 @@ export default function ResendVerificationForm({ initialEmail = "", compact = fa
       ) : null}
       {status === "success" ? (
         <p className="text-sm text-emerald-800 dark:text-emerald-200" role="status">
-          Si un compte non vérifié existe avec cet email, un nouvel email a été envoyé. Pensez à vérifier vos spams.
+          {successHint ??
+            "Si un compte non vérifié existe avec cet email, un nouvel email a été envoyé. Pensez à vérifier vos spams."}
         </p>
       ) : null}
       <button
