@@ -1,3 +1,4 @@
+import { getRefreshToken } from "@/shared/auth/auth-storage"
 import { postJson } from "@/shared/api/client"
 
 export type LogoutResponse = {
@@ -5,5 +6,10 @@ export type LogoutResponse = {
 }
 
 export async function logoutUser() {
-  return await postJson<LogoutResponse, Record<string, never>>("/api/logout", {})
+  const refreshToken = getRefreshToken()
+  return await postJson<LogoutResponse, { refresh_token?: string }>(
+    "/api/logout",
+    refreshToken ? { refresh_token: refreshToken } : {},
+    { skipAuth: true, skipUnauthorizedHandler: true },
+  )
 }

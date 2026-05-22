@@ -1,11 +1,23 @@
 import type { AuthUser } from "@/features/auth/types/user"
 
-const SESSION_TOKEN_KEY = "ecoride-session-token"
-const USER_KEY = "ecoride-user"
+export const STORAGE_KEYS = {
+  ACCESS_TOKEN: "ecoride-access-token",
+  REFRESH_TOKEN: "ecoride-refresh-token",
+  USER: "ecoride-user",
+} as const
 
-export function getSessionToken(): string | null {
+export function getAccessToken(): string | null {
   try {
-    const token = localStorage.getItem(SESSION_TOKEN_KEY)
+    const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN)
+    return token && token.length > 0 ? token : null
+  } catch {
+    return null
+  }
+}
+
+export function getRefreshToken(): string | null {
+  try {
+    const token = localStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN)
     return token && token.length > 0 ? token : null
   } catch {
     return null
@@ -14,7 +26,7 @@ export function getSessionToken(): string | null {
 
 export function getStoredUser(): AuthUser | null {
   try {
-    const raw = localStorage.getItem(USER_KEY)
+    const raw = localStorage.getItem(STORAGE_KEYS.USER)
     if (!raw) return null
     return JSON.parse(raw) as AuthUser
   } catch {
@@ -22,11 +34,11 @@ export function getStoredUser(): AuthUser | null {
   }
 }
 
-export function persistAuthSession(user: AuthUser, sessionToken?: string): void {
+export function persistAuthSession(user: AuthUser, accessToken: string, refreshToken: string): void {
   try {
-    const token = sessionToken ?? crypto.randomUUID()
-    localStorage.setItem(SESSION_TOKEN_KEY, token)
-    localStorage.setItem(USER_KEY, JSON.stringify(user))
+    localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, accessToken)
+    localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, refreshToken)
+    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user))
   } catch {
     /* quota / mode privé */
   }
@@ -34,18 +46,22 @@ export function persistAuthSession(user: AuthUser, sessionToken?: string): void 
 
 export function clearAuthSession(): void {
   try {
-    localStorage.removeItem(SESSION_TOKEN_KEY)
-    localStorage.removeItem(USER_KEY)
+    localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN)
+    localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN)
+    localStorage.removeItem(STORAGE_KEYS.USER)
   } catch {
     /* ignore */
   }
 }
 
-export function loadAuthSession(): { user: AuthUser | null; sessionToken: string | null } {
-  const sessionToken = getSessionToken()
-  const user = getStoredUser()
-  if (!sessionToken || !user) {
-    return { user: null, sessionToken: null }
+export function loadAuthSession(): {
+  user: AuthUser | null
+  accessToken: string | null
+  refreshToken: string | null
+} {
+  return {
+    user: getStoredUser(),
+    accessToken: getAccessToken(),
+    refreshToken: getRefreshToken(),
   }
-  return { user, sessionToken }
 }

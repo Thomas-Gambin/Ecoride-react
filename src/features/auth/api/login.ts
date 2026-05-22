@@ -8,9 +8,12 @@ export type LoginRequest = {
 
 export type LoginResponse = {
   message: string
-  user?: AuthUser
+  token: string
+  refresh_token: string
+  refresh_token_expiration?: number
+  user: AuthUser
 }
 
 export async function loginUser(body: LoginRequest) {
-  return await postJson<LoginResponse, LoginRequest>("/api/login", body)
+  return await postJson<LoginResponse, LoginRequest>("/api/login", body, { skipAuth: true })
 }

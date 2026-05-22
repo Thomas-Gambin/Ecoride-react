@@ -1,3 +1,5 @@
+export type ProfileType = "passenger" | "driver" | "passenger_driver"
+
 export type AuthUser = {
   id: number
   email: string
@@ -5,4 +7,5 @@ export type AuthUser = {
   roles: string[]
   credits: number
   isVerified: boolean
+  profileType: ProfileType
 }

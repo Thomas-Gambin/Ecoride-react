@@ -1,3 +1,6 @@
+import { getAccessToken } from "@/shared/auth/auth-storage"
+import { refreshAuthSession } from "@/shared/auth/auth-session"
+
 export type ApiErrorShape = {
   message: string
   fields?: Record<string, string>
@@ -5,9 +8,12 @@ export type ApiErrorShape = {
 }
 
 export type ApiFetchOptions = {
-  credentials?: RequestCredentials
-  /** Ne pas déclencher le callback global 401 (ex. bootstrap /api/me). */
+  /** Ne pas envoyer le Bearer token (login, refresh, logout). */
+  skipAuth?: boolean
+  /** Ne pas déclencher le callback global 401. */
   skipUnauthorizedHandler?: boolean
+  /** Requête déjà relancée après refresh (évite les boucles). */
+  isRetry?: boolean
 }
 
 type UnauthorizedHandler = () => void
@@ -39,22 +45,43 @@ export async function apiFetch(
   options: ApiFetchOptions = {},
 ): Promise<Response> {
   const url = `${getBaseUrl()}${path}`
-  const credentials = options.credentials ?? "include"
+  const headers: Record<string, string> = {
+    ...(init.body !== undefined ? { "Content-Type": "application/json" } : {}),
+    ...((init.headers as Record<string, string> | undefined) ?? {}),
+  }
+
+  if (!options.skipAuth) {
+    const accessToken = getAccessToken()
+    if (accessToken) {
+      headers.Authorization = `Bearer ${accessToken}`
+    }
+  }
 
   const res = await fetch(url, {
     ...init,
-    credentials,
-    headers: {
-      ...(init.body !== undefined ? { "Content-Type": "application/json" } : {}),
-      ...(init.headers ?? {}),
-    },
+    headers,
   })
+
+  const canRefresh =
+    res.status === 401 &&
+    !options.skipAuth &&
+    !options.isRetry &&
+    path !== "/api/login" &&
+    path !== "/api/token/refresh"
+
+  if (canRefresh) {
+    const refreshedUser = await refreshAuthSession()
+    if (refreshedUser) {
+      return apiFetch(path, init, { ...options, isRetry: true })
+    }
+  }
 
   if (
     res.status === 401 &&
     !options.skipUnauthorizedHandler &&
     unauthorizedHandler &&
-    path !== "/api/login"
+    path !== "/api/login" &&
+    path !== "/api/token/refresh"
   ) {
     unauthorizedHandler()
   }
@@ -88,6 +115,67 @@ export async function postJson<TResponse, TBody extends Record<string, unknown>>
     },
     options,
   )
+
+  const data = await readJsonSafe(res)
+
+  if (!res.ok) {
+    const apiError = normalizeApiError(data)
+    throw new Error(JSON.stringify(apiError))
+  }
+
+  return data as TResponse
+}
+
+export async function patchJson<TResponse, TBody extends Record<string, unknown>>(
+  path: string,
+  body: TBody,
+  options: ApiFetchOptions = {},
+): Promise<TResponse> {
+  const res = await apiFetch(
+    path,
+    {
+      method: "PATCH",
+      body: JSON.stringify(body),
+    },
+    options,
+  )
+
+  const data = await readJsonSafe(res)
+
+  if (!res.ok) {
+    const apiError = normalizeApiError(data)
+    throw new Error(JSON.stringify(apiError))
+  }
+
+  return data as TResponse
+}
+
+export async function putJson<TResponse, TBody extends Record<string, unknown>>(
+  path: string,
+  body: TBody,
+  options: ApiFetchOptions = {},
+): Promise<TResponse> {
+  const res = await apiFetch(
+    path,
+    {
+      method: "PUT",
+      body: JSON.stringify(body),
+    },
+    options,
+  )
+
+  const data = await readJsonSafe(res)
+
+  if (!res.ok) {
+    const apiError = normalizeApiError(data)
+    throw new Error(JSON.stringify(apiError))
+  }
+
+  return data as TResponse
+}
+
+export async function deleteJson<TResponse>(path: string, options: ApiFetchOptions = {}): Promise<TResponse> {
+  const res = await apiFetch(path, { method: "DELETE" }, options)
 
   const data = await readJsonSafe(res)
 
