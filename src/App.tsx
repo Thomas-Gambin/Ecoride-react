@@ -7,12 +7,16 @@ import LoginPage from "./features/auth/pages/LoginPage"
 import { ProtectedRoute } from "@/shared/components/routing/ProtectedRoute"
 import { RootLayout } from "@/shared/components/layout/RootLayout"
 import ProfilePage from "@/features/profile/pages/ProfilePage"
+import RidesListPage from "@/features/rides/pages/RidesListPage"
+import RideDetailPage from "@/features/rides/pages/RideDetailPage"
 
 function App() {
   return (
     <Routes>
       <Route element={<RootLayout />}>
         <Route path="/" element={<HomePage />} />
+        <Route path="/covoiturages" element={<RidesListPage />} />
+        <Route path="/covoiturages/:id" element={<RideDetailPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/register-success" element={<RegisterSuccessPage />} />
         <Route path="/confirm-email" element={<ConfirmEmailPage />} />
