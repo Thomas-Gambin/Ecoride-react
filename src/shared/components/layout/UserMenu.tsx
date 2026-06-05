@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useRef, useState } from "react"
+import { useCallback, useEffect, useId, useRef, useState, type FocusEvent } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { Link, useNavigate } from "react-router-dom"
 import { LogOut, Plus, User } from "lucide-react"
@@ -76,16 +76,11 @@ export function UserMenu({ variant, onNavigate, className }: UserMenuProps) {
     return () => window.removeEventListener("keydown", onKey)
   }, [open, close])
 
-  useEffect(() => {
-    if (!open) return
-    const onPointerDown = (e: MouseEvent) => {
-      if (!containerRef.current?.contains(e.target as Node)) {
-        close()
-      }
+  const handleBlur = (e: FocusEvent<HTMLDivElement>) => {
+    if (!containerRef.current?.contains(e.relatedTarget as Node)) {
+      close()
     }
-    document.addEventListener("mousedown", onPointerDown)
-    return () => document.removeEventListener("mousedown", onPointerDown)
-  }, [open, close])
+  }
 
   const handleLogout = async () => {
     close()
@@ -175,14 +170,21 @@ export function UserMenu({ variant, onNavigate, className }: UserMenuProps) {
   }
 
   return (
-    <motion.div ref={containerRef} className={cn("relative", className)} layout>
+    <motion.div
+      ref={containerRef}
+      className={cn("relative", className)}
+      layout
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={close}
+      onBlur={handleBlur}
+    >
       <button
         type="button"
         aria-label="Menu compte"
         aria-expanded={open}
         aria-haspopup="menu"
-        aria-controls={menuId}
-        onClick={() => setOpen((v) => !v)}
+        aria-controls={open ? menuId : undefined}
+        onFocus={() => setOpen(true)}
         className={cn(
           "inline-flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-2xl border outline-none transition-[background-color,border-color,transform] duration-300",
           "border-stone-200/80 bg-white/70 text-zinc-800 shadow-[0_1px_0_rgba(15,23,42,0.04)] backdrop-blur-sm",
@@ -200,19 +202,23 @@ export function UserMenu({ variant, onNavigate, className }: UserMenuProps) {
       <AnimatePresence>
         {open ? (
           <motion.div
-            id={menuId}
-            role="menu"
-            aria-label="Menu compte utilisateur"
+            className="absolute right-0 top-full z-[60] pt-2"
             initial={{ opacity: 0, y: -6, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.98 }}
             transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-            className={cn(
-              "absolute right-0 top-[calc(100%+0.5rem)] z-[60] min-w-[12.5rem] overflow-hidden rounded-2xl border p-1.5 shadow-lg",
-              "border-stone-200/80 bg-white/95 backdrop-blur-md dark:border-zinc-700/90 dark:bg-zinc-900/95",
-            )}
           >
-            {menuItems}
+            <div
+              id={menuId}
+              role="menu"
+              aria-label="Menu compte utilisateur"
+              className={cn(
+                "min-w-[12.5rem] overflow-hidden rounded-2xl border p-1.5 shadow-lg",
+                "border-stone-200/80 bg-white/95 backdrop-blur-md dark:border-zinc-700/90 dark:bg-zinc-900/95",
+              )}
+            >
+              {menuItems}
+            </div>
           </motion.div>
         ) : null}
       </AnimatePresence>
