@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useId, useRef, useState, type FocusEvent } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { Link, useNavigate } from "react-router-dom"
-import { LogOut, Plus, User } from "lucide-react"
+import { LogOut, Plus, Route, User } from "lucide-react"
 import { useAuth } from "@/shared/hooks/useAuth"
 import { cn } from "@/shared/lib/utils"
 
@@ -115,6 +115,9 @@ export function UserMenu({ variant, onNavigate, className }: UserMenuProps) {
       <Link to="/profil" role="menuitem" onClick={handleNavClick} className={menuItemClass}>
         Mon compte
       </Link>
+      <Link to="/trajets/mes-trajets" role="menuitem" onClick={handleNavClick} className={menuItemClass}>
+        Mes trajets
+      </Link>
       <Link to="/trajets/creer" role="menuitem" onClick={handleNavClick} className={menuItemClass}>
         Créer un trajet
       </Link>
@@ -148,6 +151,14 @@ export function UserMenu({ variant, onNavigate, className }: UserMenuProps) {
         >
           <User className="h-4 w-4" aria-hidden />
           Mon compte
+        </Link>
+        <Link
+          to="/trajets/mes-trajets"
+          onClick={handleNavClick}
+          className="flex cursor-pointer items-center gap-2 rounded-2xl px-3 py-3 text-base font-medium text-zinc-800 outline-none transition-colors hover:bg-white/80 dark:text-zinc-100 dark:hover:bg-zinc-800/80"
+        >
+          <Route className="h-4 w-4" aria-hidden />
+          Mes trajets
         </Link>
         <Link
           to="/trajets/creer"

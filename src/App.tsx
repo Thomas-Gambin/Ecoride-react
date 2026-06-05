@@ -9,6 +9,9 @@ import { RootLayout } from "@/shared/components/layout/RootLayout"
 import ProfilePage from "@/features/profile/pages/ProfilePage"
 import RidesListPage from "@/features/rides/pages/RidesListPage"
 import RideDetailPage from "@/features/rides/pages/RideDetailPage"
+import CreateCarpoolPage from "@/features/rides/pages/CreateCarpoolPage"
+import MyTripsPage from "@/features/rides/pages/MyTripsPage"
+import EditCarpoolPage from "@/features/rides/pages/EditCarpoolPage"
 
 function App() {
   return (
@@ -32,13 +35,26 @@ function App() {
         />
         <Route path="/demo-protege" element={<Navigate to="/profil" replace />} />
         <Route
+          path="/trajets/mes-trajets"
+          element={
+            <ProtectedRoute roles={["ROLE_USER"]}>
+              <MyTripsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/trajets/creer"
           element={
             <ProtectedRoute roles={["ROLE_USER"]}>
-              <main className="mx-auto w-full max-w-6xl px-6 py-14">
-                <h1 className="text-2xl font-extrabold text-zinc-900 dark:text-zinc-50">Créer un trajet</h1>
-                <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">Formulaire de création (à venir).</p>
-              </main>
+              <CreateCarpoolPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/trajets/:id/modifier"
+          element={
+            <ProtectedRoute roles={["ROLE_USER"]}>
+              <EditCarpoolPage />
             </ProtectedRoute>
           }
         />

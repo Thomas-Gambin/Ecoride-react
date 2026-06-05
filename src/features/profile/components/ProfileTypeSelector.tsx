@@ -1,5 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion"
-import { profileTypeLabel } from "@/features/profile/lib/profileType"
+import { motion } from "framer-motion"
 import type { ProfileType } from "@/features/profile/types/profile"
 import SoftCard from "@/features/homePage/components/SoftCard"
 import { fadeUp, staggerItems, tapScale } from "@/features/profile/lib/motion"
@@ -36,21 +35,7 @@ export function ProfileTypeSelector({ value, savedValue, isSaving, onChange, onS
 
   return (
     <SoftCard interactive={false}>
-      <section className="relative p-6">
-        <AnimatePresence>
-          {hasChanged ? (
-            <motion.span
-              key="saved-profile-badge"
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute right-6 top-6 inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-900 dark:border-emerald-700/50 dark:bg-emerald-500/10 dark:text-emerald-100"
-            >
-              Enregistré : {profileTypeLabel(savedValue)}
-            </motion.span>
-          ) : null}
-        </AnimatePresence>
+      <section className="p-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-300">
