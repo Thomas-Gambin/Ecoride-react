@@ -40,7 +40,7 @@ export default function BenefitsSection() {
           <Reveal key={title} delay={0.02 * i}>
             <SoftCard className="h-full">
               <div className="p-6">
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-stone-200/70 bg-white/65 text-emerald-800 shadow-[0_1px_0_rgba(15,23,42,0.04)] backdrop-blur-sm transition-transform duration-300 group-hover:translate-y-[-1px] dark:border-zinc-800/70 dark:bg-zinc-950/35 dark:text-emerald-200">
+                <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-stone-200/70 bg-white/65 text-emerald-800 shadow-[0_1px_0_rgba(15,23,42,0.04)] backdrop-blur-sm dark:border-zinc-800/70 dark:bg-zinc-950/35 dark:text-emerald-200">
                   <Icon className="h-5 w-5" strokeWidth={1.9} aria-hidden />
                 </div>
                 <p className="mt-4 text-base font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">

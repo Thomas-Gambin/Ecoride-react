@@ -44,12 +44,20 @@ export type CarpoolMockRecord = {
   departureDate: string
   /** Heure extraite de `carpool.departure_time` */
   departureTime: string
-  /** `carpool.departure_location` */
+  /** `carpool.departure_location` (nom de commune, compatible recherche US3/US4) */
   departureLocation: string
+  /** `carpool.departure_city_code` (code INSEE) */
+  departureCityCode?: string
+  /** `carpool.departure_postal_code` */
+  departurePostalCode?: string
   /** `carpool.arrival_date` */
   arrivalDate: string
-  /** `carpool.arrival_location` */
+  /** `carpool.arrival_location` (nom de commune) */
   arrivalLocation: string
+  /** `carpool.arrival_city_code` (code INSEE) */
+  arrivalCityCode?: string
+  /** `carpool.arrival_postal_code` */
+  arrivalPostalCode?: string
   /** `carpool.status` */
   status: CarpoolStatusDb
   /**
@@ -57,8 +65,10 @@ export type CarpoolMockRecord = {
    * (À l’intégration API : total − réservations sur la table de jointure `carpool` ↔ `user`.)
    */
   seatCount: number
-  /** `carpool.price_per_person` (crédits) */
+  /** `carpool.price_per_person` (crédits payés par le passager) */
   pricePerPerson: number
+  /** `carpool.platform_fee_credits` (commission plateforme, fixe à 2) */
+  platformFeeCredits?: number
   driver: CarpoolDriverMock
   car: CarpoolCarMock
   /** Passagers déjà inscrits (`carpool` ↔ `user`), hors conducteur */
